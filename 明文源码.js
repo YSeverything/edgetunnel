@@ -44,7 +44,7 @@ let proxyIPPool = [];
 let path = '/?ed=2560';
 let 动态UUID;
 let link = [];
-let banHosts = [atob('c3BlZWQuY2xvdWRmbGFyZS5jb20=')];
+let banHosts = []; // 清空禁止列表 atob('c3BlZWQuY2xvdWRmbGFyZS5jb20=') //禁止speed.cloudflare.com测速
 //伪装网页
 async function nginx() {
 	const text = `
