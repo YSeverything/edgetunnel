@@ -45,8 +45,42 @@ let proxyIPPool = [];
 let path = '/?ed=2560';
 let 动态UUID;
 let link = [];
-let banHosts = [atob('c3BlZWQuY2xvdWRmbGFyZS5jb20=')];
-export default {
+let banHosts = []; // 清空禁止列表 atob('c3BlZWQuY2xvdWRmbGFyZS5jb20=') //禁止speed.cloudflare.com测速
+//伪装网页
+async function nginx() {
+	const text = `
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<title>欢迎使用 nginx！</title>
+	<style>
+		body {
+			width: 35em;
+			margin: 0 auto;
+			font-family: Tahoma, Verdana, Arial, sans-serif;
+		}
+	</style>
+	</head>
+	<body>
+	<h1>欢迎使用 nginx！</h1>
+	<p>如果你看到这个页面，说明 nginx 网页服务器已成功安装并运行。还需要进一步配置。</p>
+	
+	<p>在线文档和支持请参阅
+	<a href="http://nginx.org/">nginx.org</a>。<br/>
+	商业支持请访问
+	<a href="http://nginx.com/">nginx.com</a>。</p>
+	
+	<p><em>感谢使用 nginx。</em></p>
+
+	<br/><br/><br/>
+	
+	<p><a href="https://github.com/cmliu">项目地址</a></p>
+	</body>
+	</html>
+	`
+	return text ;
+}
+//分割线export default {
 	async fetch(request, env, ctx) {
 		try {
 			const UA = request.headers.get('User-Agent') || 'null';
@@ -152,12 +186,12 @@ export default {
 				if (路径 == '/') {
 					if (env.URL302) return Response.redirect(env.URL302, 302);
 					else if (env.URL) return await 代理URL(env.URL, url);
-					else return new Response(JSON.stringify(request.cf, null, 4), {
+					else return new Response(await nginx(), {
 						status: 200,
 						headers: {
-							'content-type': 'application/json',
+							'Content-Type': 'text/html; charset=UTF-8',
 						},
-					});
+					}); //修改默认网页为nginx()
 				} else if (路径 == `/${fakeUserID}`) {
 					const fakeConfig = await 生成配置信息(userID, request.headers.get('Host'), sub, 'CF-Workers-SUB', RproxyIP, url, fakeUserID, fakeHostName, env);
 					return new Response(`${fakeConfig}`, { status: 200 });
