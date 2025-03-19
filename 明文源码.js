@@ -80,7 +80,8 @@ async function nginx() {
 	`
 	return text ;
 }
-//分割线export default {
+//分割线
+export default {
 	async fetch(request, env, ctx) {
 		try {
 			const UA = request.headers.get('User-Agent') || 'null';
